@@ -1,0 +1,12 @@
+{
+  "require": {
+    "slim/slim": "2.*"
+  },
+  "config": {
+    "preferred-install": "disk"
+  },
+  "repositories": [
+    { "type": "composer", "url": "http://packagist.phpcomposer.com" },
+    { "packagist": false }
+  ]
+}
