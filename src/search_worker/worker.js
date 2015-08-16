@@ -1,12 +1,11 @@
 var amqp = require('amqp');
-var consumer = require('./consumer').consumer;
+var events = require('./events');
 
 var config = {
   host: 'localhost',
   port: 5672,
   login: 'guest',
-  password: 'guest',
-  queueName: 'search_sync'
+  password: 'guest'
 };
 
 var connection = amqp.createConnection({
@@ -16,28 +15,27 @@ var connection = amqp.createConnection({
   password: config.password
 });
 
+var EXCHANGE_NAME = 'search_system';
+
 connection.on('ready', function () {
-  var options = {
+  var queueOpts = {
     durable: true,
     autoDelete: false
   };
 
-  connection.queue(config.queueName, options, function (queue) {
-    console.log('Search worker started. Waiting for messages...');
+  connection.queue('search_system_sync', queueOpts, function (queue) {
 
-    queue.bind('#');
+    var exchangeOpts = {
+      type: 'direct',
+      durable: true,
+      autoDelete: false
+    };
 
-    queue.subscribe({
-      ack: true
-    }, function (message, headers, deliveryInfo, ack) {
-      var body = message.data.toString('utf-8');
-      console.log('Message arrived:');
-      console.log(body);
-
-      consumer(JSON.parse(body));
-
-      ack.acknowledge();
+    connection.exchange(EXCHANGE_NAME, exchangeOpts, function (exchange) {
+      console.log('Exchange ready');
+      events.init(exchange, queue);
     });
+
   });
 });
 

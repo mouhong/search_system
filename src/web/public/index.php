@@ -7,7 +7,7 @@ require '../app/autoload.php';
 require '../app/config.php';
 
 // RabbitMQ
-MessageQueue::initialize($GLOBALS);
+MessageBus::initialize($GLOBALS);
 
 // Slim
 $app = new \Slim\Slim([

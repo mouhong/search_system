@@ -19,35 +19,21 @@ class UserService {
   public static function create($user) {
     $repo = Database::repository(User::class);
     $repo->create($user);
-
     // TODO: Might fail here
-    $msg = new SearchSyncMessage();
-    $msg->action = 'add';
-    $msg->doc = $user;
-    $msg->docId = $user->id;
-    MessageQueue::publish($msg, MessageQueue::SEARCH_SYNC);
+    MessageBus::publish(new UserCreated($user));
   }
 
   public static function update($user) {
     $repo = Database::repository(User::class);
     $repo->update($user);
-
     // TODO: Might fail here
-    $msg = new SearchSyncMessage();
-    $msg->action = 'update';
-    $msg->doc = $user;
-    $msg->docId = $user->id;
-    MessageQueue::publish($msg, MessageQueue::SEARCH_SYNC);
+    MessageBus::publish(new UserUpdated($user));
   }
 
   public static function delete($id) {
     $repo = Database::repository(User::class);
     $repo->delete($id);
-
     // TODO: Might fail here
-    $msg = new SearchSyncMessage();
-    $msg->action = 'delete';
-    $msg->docId = $id;
-    MessageQueue::publish($msg, MessageQueue::SEARCH_SYNC);
+    MessageBus::publish(new UserDeleted($id));
   }
 }
