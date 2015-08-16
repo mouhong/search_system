@@ -6,7 +6,7 @@ $app->group('/users', function () use ($app) {
   $app->get('/', function () use ($app) {
     $users = Database::repository(User::class)
                      ->query()
-                     ->where('email = :email', [ 'email' => 'linmouhong@gmail.com'])
+                     //->where('email = :email', [ 'email' => 'linmouhong@gmail.com'])
                      ->toList();
 
     foreach ($users as $user) {
@@ -18,15 +18,16 @@ $app->group('/users', function () use ($app) {
   $app->get('/create', function () use ($app) {
 
     $user = new User();
+    $user->id = 1;
     $user->first_name = 'John';
     $user->last_name = 'You';
     $user->age = 33;
     $user->email = 'john@gmail.com';
 
-    Database::repository(User::class)
-            ->create($user);
+    $sql = Database::repository(User::class)
+            ->update($user);
 
-    echo 'OK';
+    echo $sql;
   });
 
   // POST: /users/save

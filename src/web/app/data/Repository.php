@@ -52,11 +52,51 @@ class Repository {
     $stmt->execute($params);
   }
 
+  // TODO: Optimistic concurrency control
   public function update($model) {
-    // TODO: Not implemented
+    $metadata = ModelMetadata::get($this->clazz);
+    $table = Conventions::toTableName($this->clazz);
+    $sql = "update $table set ";
+    $where = NULL;
+    $params = [];
+
+    $first = true;
+
+    foreach ($metadata->getProperties() as $prop) {
+      $prop_name = $prop->name;
+      if (Conventions::isIdentityField($prop_name)) {
+        $where = " where $prop_name = :$prop_name";
+      } else {
+        if (!$first) {
+          $sql .= ', ';
+        }
+        $sql .= "$prop_name = :$prop_name";
+        $first = false;
+      }
+
+      $prop_value = $model->$prop_name;
+
+      if ($prop_name === 'updated') {
+        $prop_value = time();
+      }
+
+      $params[$prop_name] = $prop_value;
+    }
+
+    return $sql .= $where;
+
+    $stmt = $this->conn->prepare($sql .= $where);
+    $stmt->execute($params);
   }
 
-  public function delete($predicate, $params) {
-    // TODO: Not implemented
+  public function delete($id) {
+    $table = Conventions::toTableName($this->clazz);
+    $id_filed = ModelMetadata.get($this->clazz)->getIdProperty();
+    $sql = "delete from $table where {$id_field}= :{$id_field}";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      $id_field => $id
+    ]);
   }
 }

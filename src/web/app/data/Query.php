@@ -57,7 +57,7 @@ class Query {
   }
 
   public function getSql() {
-    $table = Conventions::toTableName($this->clazz));
+    $table = Conventions::toTableName($this->clazz);
     $sql = "select * from {$table}";
 
     if ($this->predicates) {

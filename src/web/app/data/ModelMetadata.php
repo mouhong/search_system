@@ -7,6 +7,15 @@ class ModelMetadata {
     $this->clazz = $clazz;
   }
 
+  public function getIdProperty() {
+    // TODO: Optimization needed
+    foreach ($this->getProperties() as $prop) {
+      if (Conventions::isIdentityField($prop->name)) {
+        return $prop;
+      }
+    }
+  }
+
   public function getProperties() {
     // TODO: I think reflection is slow, we might need to cache the result.
     //       Figure it out later
