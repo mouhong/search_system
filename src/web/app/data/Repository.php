@@ -3,6 +3,7 @@
 class Repository {
   private $conn;
   private $clazz;
+  private $hasTransaction;
 
   function __construct($conn, $clazz) {
     $this->conn = $conn;
@@ -14,13 +15,20 @@ class Repository {
   }
 
   public function transacted($actions) {
-    try {
-      $this->conn->beginTransaction();
+    if ($this->hasTransaction) {
       $actions();
-      $this->conn->commit();
-    } catch (Exception $e) {
-      $this->conn->rollBack();
-      throw $e;
+    } else {
+      try {
+        $this->conn->beginTransaction();
+        $this->hasTransaction = true;
+        $actions();
+        $this->conn->commit();
+      } catch (Exception $e) {
+        $this->conn->rollBack();
+        throw $e;
+      } finally {
+        $this->hasTransaction = false;
+      }
     }
   }
 
@@ -45,18 +53,23 @@ class Repository {
 
     $table = Conventions::toTableName($this->clazz);
     // TODO: Select model id because we don't generate id in app layer
-    $sql = 'insert into ' . $table . ' (' . join(',', $fields) .
-           ') values (' . join(',', $values) . ')';
+    $sql = 'INSERT INTO ' . $table . ' (' . join(',', $fields) .
+           ') VALUES (' . join(',', $values) . ')';
 
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute($params);
+    $id_field = $metadata->getIdProperty($this->clazz)->name;
+
+    $this->transacted(function () use ($stmt, $params, $id_field, $model) {
+      $stmt->execute($params);
+      $model->$id_field = $this->conn->lastInsertId();
+    });
   }
 
   // TODO: Optimistic concurrency control
   public function update($model) {
     $metadata = ModelMetadata::get($this->clazz);
     $table = Conventions::toTableName($this->clazz);
-    $sql = "update $table set ";
+    $sql = "UPDATE $table SET ";
     $where = NULL;
     $params = [];
 
@@ -83,8 +96,6 @@ class Repository {
       $params[$prop_name] = $prop_value;
     }
 
-    return $sql .= $where;
-
     $stmt = $this->conn->prepare($sql .= $where);
     $stmt->execute($params);
   }
@@ -92,7 +103,7 @@ class Repository {
   public function delete($id) {
     $table = Conventions::toTableName($this->clazz);
     $id_filed = ModelMetadata.get($this->clazz)->getIdProperty();
-    $sql = "delete from $table where {$id_field}= :{$id_field}";
+    $sql = "DELETE FROM $table WHERE {$id_field}= :{$id_field}";
 
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
