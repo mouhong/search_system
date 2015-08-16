@@ -4,10 +4,15 @@ $app->group('/users', function () use ($app) {
 
   // GET: /users/
   $app->get('/', function () use ($app) {
-    $users = UserService::query()->toList();
-    foreach ($users as $user) {
-      echo $user->first_name . '<br/>';
-    }
+    $hits = Elastic::search('user');
+    $users = array_map(function ($hit) {
+      return $hit->_source;
+    }, $hits->hits);
+
+    return $app->render('user_list.php', [
+      'hits' => $hits,
+      'users' => $users
+    ]);
   });
 
   // GET: /users/create

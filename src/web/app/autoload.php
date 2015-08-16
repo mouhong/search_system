@@ -1,7 +1,9 @@
 <?php
 // Register models
 spl_autoload_register(function ($name) {
-  $folders = ['models', 'data', 'services', 'messaging', 'messaging/messages'];
+  $folders = [
+    'models', 'data', 'services', 'search',
+    'messaging', 'messaging/messages'];
 
   foreach ($folders as $folder) {
     $path = $GLOBALS['DIR_APP'] . '/' . $folder . '/' . $name . '.php';

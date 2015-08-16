@@ -10,4 +10,7 @@ $GLOBALS['RABBITMQ_PORT'] = 5672;
 $GLOBALS['RABBITMQ_USER'] = 'guest';
 $GLOBALS['RABBITMQ_PWD']  = 'guest';
 
+$GLOBALS['ELASTIC_HOST']  = 'localhost';
+$GLOBALS['ELASTIC_PORT']  = 9200;
+
 date_default_timezone_set('UTC');

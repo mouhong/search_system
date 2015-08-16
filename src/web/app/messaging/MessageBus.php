@@ -3,7 +3,7 @@ use PhpAmqpLib\Connection\AMQPConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class MessageBus {
-  public static $channel;
+  private static $channel;
 
   const EXCHANGE_NAME = "search_system";
 
@@ -19,10 +19,10 @@ class MessageBus {
 
     self::$channel->exchange_declare(
       self::EXCHANGE_NAME,  /* exchange name */
-      'direct',         /* type */
-      false,            /* passive */
-      true,             /* durable */
-      false             /* auto_delete */
+      'direct',             /* type */
+      false,                /* passive */
+      true,                 /* durable */
+      false                 /* auto_delete */
     );
   }
 

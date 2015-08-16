@@ -12,7 +12,8 @@ MessageBus::initialize($GLOBALS);
 // Slim
 $app = new \Slim\Slim([
   'debug' => true,
-  'mode' => 'development'
+  'mode' => 'development',
+  'templates.path' => '../app/views'
 ]);
 
 // Register routes
