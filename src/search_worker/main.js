@@ -1,12 +1,8 @@
 var amqp = require('amqp');
 var events = require('./events');
+var config = require('./config');
 
-var config = {
-  host: 'localhost',
-  port: 5672,
-  login: 'guest',
-  password: 'guest'
-};
+var EXCHANGE_NAME = 'search_system';
 
 var connection = amqp.createConnection({
   host: config.host,
@@ -14,8 +10,6 @@ var connection = amqp.createConnection({
   login: config.login,
   password: config.password
 });
-
-var EXCHANGE_NAME = 'search_system';
 
 connection.on('ready', function () {
   var queueOpts = {
@@ -32,7 +26,6 @@ connection.on('ready', function () {
     };
 
     connection.exchange(EXCHANGE_NAME, exchangeOpts, function (exchange) {
-      console.log('Exchange ready');
       events.init(exchange, queue);
     });
 
@@ -42,4 +35,4 @@ connection.on('ready', function () {
 connection.on('error', function (e) {
   console.log('Connection error:');
   console.log(e);
-})
+});
