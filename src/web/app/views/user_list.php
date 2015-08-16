@@ -1,4 +1,12 @@
 
+  <div style="margin-bottom:10px">
+    <form method="get" action="" class="form-inline text-right">
+      <input type="text" name="q" class="form-control" placeholder="Keywords"
+             value="<?= $query ?>" />
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -27,6 +35,13 @@
           </td>
         </tr>
       <?php endforeach ?>
+      <?php if ($hits->total === 0): ?>
+        <tr>
+          <td colspan="100" style="padding:30px;text-align:center">
+            No records to display
+          </td>
+        </tr>
+      <?php endif; ?>
     </tbody>
 
   </table>

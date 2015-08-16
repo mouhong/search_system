@@ -4,13 +4,15 @@ $app->group('/users', function () use ($app) {
 
   // GET: /users/
   $app->get('/', function () use ($app) {
-    $hits = Elastic::search('user');
+    $query = $app->request->get('q');
+    $hits = Elastic::search('user', $query);
     $users = array_map(function ($hit) {
       return $hit->_source;
     }, $hits->hits);
 
     render('user_list.php', [
       'title'       => 'Users',
+      'query'       => $query,
       'hits'        => $hits,
       'users'       => $users,
       'active_menu' => 'users'
