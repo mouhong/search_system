@@ -16,8 +16,8 @@ module.exports = {
 
     events.on('UserDeleted', function (event) {
       console.log('Receive event: UserDeleted');
-      elastic.remove(event.userId);
+      elastic.remove('user', event.userId);
     });
-    
+
   }
 };

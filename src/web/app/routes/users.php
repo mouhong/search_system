@@ -15,7 +15,8 @@ $app->group('/users', function () use ($app) {
       'users'       => $users,
       'active_menu' => 'users'
     ]);
-  });
+  })
+  ->name('user_list');
 
   // GET: /users/create
   $app->get('/create', function () use ($app) {
@@ -29,7 +30,7 @@ $app->group('/users', function () use ($app) {
   // POST: /users/create
   $app->post('/create', function () use ($app) {
     $user = user_save($app, NULL);
-    $app->redirect($app->urlFor('user_edit', [ 'id' => $user->id ]));
+    $app->redirect($app->urlFor('user_edit', ['id' => $user->id]));
   });
 
   // GET: /users/:id/edit
@@ -47,6 +48,10 @@ $app->group('/users', function () use ($app) {
   $app->post('/:id/edit', function ($id) use ($app) {
     $user = user_save($app, $id);
     $app->redirect($app->urlFor('user_edit', [ 'id' => $user->id ]));
+  });
+
+  $app->delete('/:id', function ($id) use ($app) {
+    UserService::delete($id);
   });
 
   /**

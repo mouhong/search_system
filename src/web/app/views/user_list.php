@@ -23,7 +23,7 @@
             <?= $user->age ?>
           </td>
           <td>
-
+            <a href="#" data-toggle="delete-user" data-id="<?= $user->id ?>">Delete</a>
           </td>
         </tr>
       <?php endforeach ?>
@@ -33,3 +33,30 @@
   <div>
     Total: <?= $hits->total ?>
   </div>
+
+<script>
+  $(function () {
+    var deleting = false;
+
+    $(document).on('click', '[data-toggle="delete-user"]', function () {
+      if (deleting) {
+        return false;
+      }
+      deleting = true;
+
+      $.ajax({
+        url: '/users/' + $(this).data('id'),
+        type: 'DELETE',
+        contentType: 'application/json'
+      })
+      .done(function () {
+        setTimeout(function () {
+          deleting = false;
+          location.href = '/users/';
+        }, 800);
+      });
+
+      return false;
+    });
+  });
+</script>

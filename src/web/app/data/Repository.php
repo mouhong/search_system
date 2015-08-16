@@ -101,7 +101,7 @@ class Repository {
 
   public function delete($id) {
     $table = Conventions::toTableName($this->clazz);
-    $id_filed = ModelMetadata.get($this->clazz)->getIdProperty();
+    $id_field = ModelMetadata::get($this->clazz)->getIdProperty()->name;
     $sql = "DELETE FROM $table WHERE {$id_field}= :{$id_field}";
 
     $stmt = $this->conn->prepare($sql);
