@@ -16,12 +16,17 @@ $app->group('/users', function () use ($app) {
 
   // GET: /users/create
   $app->get('/create', function () use ($app) {
-    $user = new User();
-    $user->name = 'Mouhong';
 
-    $app->render('user_edit.php', [
-      'model' => $user
-    ]);
+    $user = new User();
+    $user->first_name = 'John';
+    $user->last_name = 'You';
+    $user->age = 33;
+    $user->email = 'john@gmail.com';
+
+    Database::repository(User::class)
+            ->create($user);
+
+    echo 'OK';
   });
 
   // POST: /users/save

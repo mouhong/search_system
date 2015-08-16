@@ -9,4 +9,8 @@ class User {
   public $age;
   public $created;
   public $updated;
+
+  function __construct() {
+    $this->created = time();
+  }
 }

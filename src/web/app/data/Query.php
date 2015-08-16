@@ -1,16 +1,16 @@
 <?php
 
 // TODO: Implement Iterator
-class SelectQuery {
-  private $class;
+class Query {
+  private $clazz;
   private $conn;
   private $params;
   private $predicates = [];
   private $orderBys = [];
 
-  function __construct($conn, $class) {
+  function __construct($conn, $clazz) {
     $this->conn = $conn;
-    $this->class = $class;
+    $this->clazz = $clazz;
   }
 
   public function where($predicate, $params = null) {
@@ -57,7 +57,7 @@ class SelectQuery {
   }
 
   public function getSql() {
-    $table = $this->getTableName();
+    $table = Conventions::toTableName($this->clazz));
     $sql = "select * from {$table}";
 
     if ($this->predicates) {
@@ -83,14 +83,9 @@ class SelectQuery {
   private function execute() {
     $sql = $this->getSql();
     $stmt = $this->conn->prepare($sql);
-    $stmt->setFetchMode(PDO::FETCH_CLASS, $this->class);
+    $stmt->setFetchMode(PDO::FETCH_CLASS, $this->clazz);
     $stmt->execute($this->params);
 
     return $stmt;
-  }
-
-  private function getTableName() {
-    // TODO: Improve it or make it customizable
-    return strtolower($this->class) . 's';
   }
 }

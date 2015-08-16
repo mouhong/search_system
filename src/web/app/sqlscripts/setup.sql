@@ -6,8 +6,8 @@ create table users
   first_name varchar(20) null,
   last_name varchar(20) not null,
   age int not null,
-  created datetime not null,
-  updated datetime null,
+  created int not null,
+  updated int null,
 
   constraint PK_users primary key (id)
 );
