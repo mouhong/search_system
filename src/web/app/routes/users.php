@@ -4,11 +4,7 @@ $app->group('/users', function () use ($app) {
 
   // GET: /users/
   $app->get('/', function () use ($app) {
-    $users = Database::repository(User::class)
-                     ->query()
-                     //->where('email = :email', [ 'email' => 'linmouhong@gmail.com'])
-                     ->toList();
-
+    $users = UserService::query()->toList();
     foreach ($users as $user) {
       echo $user->first_name . '<br/>';
     }
@@ -29,11 +25,7 @@ $app->group('/users', function () use ($app) {
 
   // GET: /users/:id/edit
   $app->get('/:id/edit', function ($id) use ($app) {
-    $db = Database::repository(User::class);
-    $user = $db->query()
-               ->where('id=:id', [ 'id' => $id ])
-               ->first();
-
+    $user = UserService::findById($id);
     return $app->render('user_edit.php', [
       'model' => $user
     ]);
@@ -49,14 +41,7 @@ $app->group('/users', function () use ($app) {
   function user_save($app, $id) {
     $request = $app->request;
 
-    $db = Database::repository(User::class);
-    $user = NULL;
-
-    if ($id) {
-      $user = $db->query()->where('id = :id', [ 'id' => $id ])->first();
-    } else {
-      $user = new User();
-    }
+    $user = $id ? UserService::findById($id) : new User();
 
     $user->first_name = $request->post('first_name');
     $user->last_name = $request->post('last_name');
@@ -64,9 +49,9 @@ $app->group('/users', function () use ($app) {
     $user->email = $request->post('email');
 
     if ($id) {
-      $db->update($user);
+      UserService::update($user);
     } else {
-      $db->create($user);
+      UserService::create($user);
     }
 
     return $user;

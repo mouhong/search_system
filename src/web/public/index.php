@@ -6,6 +6,10 @@ require '../app/vendor/autoload.php';
 require '../app/autoload.php';
 require '../app/config.php';
 
+// RabbitMQ
+MessageQueue::initialize($GLOBALS);
+
+// Slim
 $app = new \Slim\Slim([
   'debug' => true,
   'mode' => 'development'

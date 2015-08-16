@@ -52,7 +52,6 @@ class Repository {
     }
 
     $table = Conventions::toTableName($this->clazz);
-    // TODO: Select model id because we don't generate id in app layer
     $sql = 'INSERT INTO ' . $table . ' (' . join(',', $fields) .
            ') VALUES (' . join(',', $values) . ')';
 
