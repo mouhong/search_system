@@ -1,15 +1,35 @@
-<html>
-<body>
-  <div>
-    <?php foreach ($users as $user): ?>
-      <div>
-        <?= $user->first_name ?> <?= $user->last_name ?><br/>
-        <?= $user->email ?> (<?= $user->age ?>)
-      </div>
-    <?php endforeach ?>
-  </div>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($users as $user): ?>
+        <tr>
+          <td>
+            <a href="/users/<?= $user->id ?>/edit">
+              <?= $user->first_name ?> <?= $user->last_name ?>
+            </a>
+          </td>
+          <td>
+            <?= $user->email ?>
+          </td>
+          <td>
+            <?= $user->age ?>
+          </td>
+          <td>
+
+          </td>
+        </tr>
+      <?php endforeach ?>
+    </tbody>
+
+  </table>
   <div>
     Total: <?= $hits->total ?>
   </div>
-</body>
-</html>

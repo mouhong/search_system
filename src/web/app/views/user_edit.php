@@ -1,18 +1,23 @@
-<?php
-?>
-<html>
-  <body>
-    <form action="" method="post">
-      <input type="hidden" value="<?= $model->id ?>" />
-      Name:
-      <input type="text" name="first_name" placeholder="First name" value="<?= $model->first_name ?>" />
-      <input type="text" name="last_name" placeholder="Last name" value="<?= $model->last_name ?>" />
-      <br/>
-      Email: <input type="text" name="email" value="<?= $model->email ?>" />
-      <br/>
-      Age: <input type="text" name="age" value="<?= $model->age ?>" />
-      <br/>
-      <button type="submit"><?= $model->id ? 'Update' : 'Create' ?></button>
-    </form>
-  </body>
-</html>
+
+  <form action="" method="post" class="form-horizontal">
+    <div class="form-group">
+      <label class="control-label col-sm-2">Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control"
+               name="first_name" placeholder="First name"
+               value="<?= $model->first_name ?>" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">Email</label>
+      <div class="col-sm-10">
+        <input type="text" name="email" class="form-control"
+               value="<?= $model->email ?>" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+        <button type="submit" class="btn btn-primary btn-lg"><?= $model->id ? 'Update' : 'Create' ?></button>
+      </div>
+    </div>
+  </form>

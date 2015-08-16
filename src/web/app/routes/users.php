@@ -9,16 +9,20 @@ $app->group('/users', function () use ($app) {
       return $hit->_source;
     }, $hits->hits);
 
-    return $app->render('user_list.php', [
-      'hits' => $hits,
-      'users' => $users
+    render('user_list.php', [
+      'title'       => 'Users',
+      'hits'        => $hits,
+      'users'       => $users,
+      'active_menu' => 'users'
     ]);
   });
 
   // GET: /users/create
   $app->get('/create', function () use ($app) {
-    return $app->render('user_edit.php', [
-      'model' => new User()
+    render('user_edit.php', [
+      'model'       => new User(),
+      'title'       => 'Create user',
+      'active_menu' => 'create'
     ]);
   });
 
@@ -31,8 +35,10 @@ $app->group('/users', function () use ($app) {
   // GET: /users/:id/edit
   $app->get('/:id/edit', function ($id) use ($app) {
     $user = UserService::findById($id);
-    return $app->render('user_edit.php', [
-      'model' => $user
+    render('user_edit.php', [
+      'model'       => $user,
+      'title'       => 'Edit user',
+      'active_menu' => 'create'
     ]);
   })
   ->name('user_edit');
@@ -43,6 +49,19 @@ $app->group('/users', function () use ($app) {
     $app->redirect($app->urlFor('user_edit', [ 'id' => $user->id ]));
   });
 
+  /**
+  * Render a view with default layout
+  * TODO: Use a better template engine
+  */
+  function render($view, $data) {
+    global $app;
+    $data['view'] = $view;
+    $app->render('layout.php', $data);
+  }
+
+  /**
+  * Create or update a user
+  */
   function user_save($app, $id) {
     $request = $app->request;
 
