@@ -32,7 +32,7 @@ module.exports = {
       // Invoke consumers
       var consumers = _registry[deliveryInfo.routingKey];
       for (var i = 0, consumer; consumer = consumers[i]; i++) {
-        consumer(data.payload);
+        consumer(data);
       }
 
       ack.acknowledge();
