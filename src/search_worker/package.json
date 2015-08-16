@@ -1,0 +1,8 @@
+{
+  "name": "search_worker",
+  "description": "",
+  "author": "",
+  "dependencies": {
+    "amqp": "0.2.4"
+  }
+}

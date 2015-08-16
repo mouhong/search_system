@@ -1,0 +1,2 @@
+exports.consumer = function (msg) {
+};
