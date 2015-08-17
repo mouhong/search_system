@@ -32,7 +32,7 @@ $app->group('/users', function () use ($app) {
   // POST: /users/create
   $app->post('/create', function () use ($app) {
     $user = user_save($app, NULL);
-    $app->redirect($app->urlFor('user_edit', ['id' => $user->id]));
+    $app->redirect($app->urlFor('success'));
   });
 
   // GET: /users/:id/edit
@@ -49,12 +49,20 @@ $app->group('/users', function () use ($app) {
   // POST: /users/:id/edit
   $app->post('/:id/edit', function ($id) use ($app) {
     $user = user_save($app, $id);
-    $app->redirect($app->urlFor('user_edit', [ 'id' => $user->id ]));
+    $app->redirect($app->urlFor('success'));
   });
 
   $app->delete('/:id', function ($id) use ($app) {
     UserService::delete($id);
   });
+
+  $app->get('/success', function () use ($app) {
+    render('success.php', [
+      'title' => 'Success',
+      'active_menu' => ''
+    ]);
+  })
+  ->name('success');
 
   /**
   * Render a view with default layout

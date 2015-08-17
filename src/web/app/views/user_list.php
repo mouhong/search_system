@@ -65,10 +65,7 @@
         contentType: 'application/json'
       })
       .done(function () {
-        setTimeout(function () {
-          deleting = false;
-          location.href = '/users/';
-        }, 800);
+        location.href = '/users/success';
       });
 
       return false;
